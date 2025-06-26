@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pavlo Kozii — Portefólio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Блок із повідомленням про бета-версію зверху */
+    .beta-banner {
+      background-color: #ff9900;
+      color: #000;
+      text-align: center;
+      padding: 0.6em 1em;
+      font-weight: 600;
+      font-size: 1em;
+      font-family: 'Segoe UI', sans-serif;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 9999;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    header {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #000, #222);
+      animation: fadeIn 2s ease;
+      padding-top: 2.5em; /* Відступ для банера зверху */
+    }
+
+    .intro {
+      display: flex;
+      align-items: center;
+      gap: 3em;
+      max-width: 1200px;
+      padding: 2em;
+    }
+
+    .photo-container {
+      position: relative;
+      width: 300px;
+      height: 400px;
+      cursor: pointer;
+    }
+
+    .photo-container img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: all 1s ease;
+    }
+
+    .photo-front {
+      z-index: 2;
+    }
+
+    .photo-back {
+      z-index: 1;
+      transform: translate(20px, 20px) scale(0.95);
+      opacity: 0.7;
+    }
+
+    .photo-container.flipped .photo-front {
+      z-index: 1;
+      transform: translate(20px, 20px) scale(0.95);
+      opacity: 0.7;
+    }
+
+    .photo-container.flipped .photo-back {
+      z-index: 2;
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+
+    .vertical-text {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 2em;
+      color: #888;
+      letter-spacing: 0.2em;
+    }
+
+    .intro-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    .intro-text h1 {
+      font-size: 3em;
+    }
+
+    .intro-text p.role {
+      font-size: 1.2em;
+      color: #aaa;
+    }
+
+    .intro-text p.description {
+      font-size: 1em;
+      color: #bbb;
+      max-width: 500px;
+      line-height: 1.5em;
+    }
+
+    .about,
+    .projects {
+      padding: 4em 2em;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .about h2,
+    .projects h2 {
+      font-size: 2em;
+      margin-bottom: 1em;
+      border-bottom: 2px solid #444;
+      display: inline-block;
+      padding-bottom: 0.3em;
+    }
+
+    .about p {
+      font-size: 1.1em;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5em;
+      margin-top: 2em;
+    }
+
+    .gallery-item {
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Оновлений стиль для картинки логотипа котика */
+    .gallery-item img {
+      width: auto;
+      max-height: 150px; /* Зменшена висота */
+      display: block;
+      margin: 0 auto;
+    }
+
+    .view-btn {
+      display: block;
+      margin: 2em auto 0;
+      padding: 0.8em 2em;
+      border: none;
+      background-color: #fff;
+      color: #000;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .view-btn:hover {
+      background-color: #ccc;
+    }
+
+    footer {
+      padding: 2em;
+      text-align: center;
+      color: #555;
+      font-size: 0.9em;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.querySelector('.photo-container');
+      container.innerHTML = `
+        <img src="pavfot1.jpg" alt="Pavlo Kozii" class="photo-front" />
+        <img src="pavfot2.jpg" alt="Pavlo Kozii 2" class="photo-back" />
+      `;
+
+      const toggleFlip = () => {
+        container.classList.toggle('flipped');
+      };
+
+      container.addEventListener('click', toggleFlip);
+      setInterval(toggleFlip, 8000);
+    });
+  </script>
+</head>
+<body>
+  <div class="beta-banner">
+    Este site está em <strong>versão beta</strong>. O lançamento oficial está previsto para aproximadamente 1 de julho de 2025. Obrigado pela compreensão!
+  </div>
+
+  <header>
+    <div class="intro">
+      <div class="vertical-text">HELLO, YOU</div>
+      <div class="photo-container"></div>
+      <div class="intro-text">
+        <h1>Pavlo Kozii</h1>
+        <p class="role">Desenvolvedor de Software | Estudante | Entusiasta Técnico</p> <!-- Роль -->
+        <p class="description">
+          O meu nome é Pavlo e tenho paixão por criar soluções simples, elegantes e eficazes. Estou sempre à procura de novos desafios, gosto de trabalhar em projetos reais e de aprimorar as minhas competências diariamente.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <section class="about">
+    <h2>Sobre mim</h2>
+    <p>
+      Aqui encontra uma breve descrição sobre mim: quem sou, o que faço, os meus objetivos, competências e a minha abordagem ao trabalho.
+    </p>
+  </section>
+
+  <section class="projects">
+    <h2>Os meus projetos</h2>
+    <p>
+     Este é um site importante que criei para a escola.
+    </p>
+    <div class="gallery">
+      <div class="gallery-item">
+        <img src="LOGO_CAT_WEB.png" alt="Site da escola" />
+      </div>
+    </div>
+    <p style="margin-top: 2em; color: #aaa;">
+      Atualmente, estou a trabalhar ativamente em outros projetos — nomeadamente a desenvolver competências na área da cibersegurança, a criar novos sites utilizando JavaScript e a desenvolver aplicações em Python. Em breve, estes também estarão disponíveis aqui.
+    </p>
+    <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">
+      <button class="view-btn">GitHub — Ver mais</button>
+    </a>
+  </section>
+
+  <footer>
+    &copy; 2025 Pavlo Kozii. 
+  </footer>
+</body>
+</html>
