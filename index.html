@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pavlo Kozii — Portefólio</title>
+  <link rel="icon" href="icon.png" type="image/png"> 
   <style>
     * {
       margin: 0;
@@ -18,22 +19,6 @@
       overflow-x: hidden;
     }
 
-    /* Блок із повідомленням про бета-версію зверху */
-    .beta-banner {
-      background-color: #ff9900;
-      color: #000;
-      text-align: center;
-      padding: 0.6em 1em;
-      font-weight: 600;
-      font-size: 1em;
-      font-family: 'Segoe UI', sans-serif;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 9999;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    }
-
     header {
       height: 100vh;
       display: flex;
@@ -41,7 +26,7 @@
       justify-content: center;
       background: linear-gradient(135deg, #000, #222);
       animation: fadeIn 2s ease;
-      padding-top: 2.5em; /* Відступ для банера зверху */
+      padding-top: 2.5em;
     }
 
     .intro {
@@ -68,22 +53,17 @@
       transition: all 1s ease;
     }
 
-    .photo-front {
-      z-index: 2;
-    }
-
+    .photo-front { z-index: 2; }
     .photo-back {
       z-index: 1;
       transform: translate(20px, 20px) scale(0.95);
       opacity: 0.7;
     }
-
     .photo-container.flipped .photo-front {
       z-index: 1;
       transform: translate(20px, 20px) scale(0.95);
       opacity: 0.7;
     }
-
     .photo-container.flipped .photo-back {
       z-index: 2;
       transform: translate(0, 0) scale(1);
@@ -104,10 +84,7 @@
       gap: 1em;
     }
 
-    .intro-text h1 {
-      font-size: 3em;
-    }
-
+    .intro-text h1 { font-size: 3em; }
     .intro-text p.role {
       font-size: 1.2em;
       color: #aaa;
@@ -120,15 +97,13 @@
       line-height: 1.5em;
     }
 
-    .about,
-    .projects {
+    .about, .projects, .code-section {
       padding: 4em 2em;
       max-width: 900px;
       margin: 0 auto;
     }
 
-    .about h2,
-    .projects h2 {
+    .about h2, .projects h2, .code-section h2 {
       font-size: 2em;
       margin-bottom: 1em;
       border-bottom: 2px solid #444;
@@ -142,18 +117,26 @@
       line-height: 1.6;
     }
 
+   
     .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5em;
+      display: flex;
+      gap: 2em;
+      flex-wrap: nowrap;
+      align-items: flex-start;
       margin-top: 2em;
     }
 
     .gallery-item {
+      flex: 0 0 320px;
       background-color: #1a1a1a;
       border-radius: 12px;
       overflow: hidden;
+      padding: 1em;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
     }
 
     .gallery-item:hover {
@@ -161,29 +144,68 @@
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
 
-    /* Оновлений стиль для картинки логотипа котика */
     .gallery-item img {
-      width: auto;
-      max-height: 150px; /* Зменшена висота */
-      display: block;
-      margin: 0 auto;
+      width: 100%;
+      max-height: 150px;
+      object-fit: contain;
+      margin-bottom: 1em;
+      border-radius: 8px;
     }
 
-    .view-btn {
-      display: block;
-      margin: 2em auto 0;
-      padding: 0.8em 2em;
-      border: none;
+    .gallery-item p {
+      color: #aaa;
+      font-size: 0.95em;
+      line-height: 1.4em;
+      text-align: center;
+    }
+
+    .screenshots {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      flex: 0 0 350px;
+    }
+
+    .screenshots img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      object-fit: cover;
+      max-height: 150px;
+    }
+
+    .code-block {
+      margin-bottom: 2em;
+    }
+
+    .toggle-btn {
       background-color: #fff;
       color: #000;
+      padding: 0.6em 1.2em;
+      border: none;
       font-weight: bold;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      margin-bottom: 1em;
     }
 
-    .view-btn:hover {
-      background-color: #ccc;
+    .toggle-btn:hover {
+      background-color: #ddd;
+    }
+
+    .hidden-code {
+      display: none;
+    }
+
+    pre {
+      background-color: #1a1a1a;
+      padding: 1em;
+      border-radius: 8px;
+      overflow-x: auto;
+      color: #eee;
+      font-size: 0.9em;
+      line-height: 1.5em;
+      margin-bottom: 2em;
     }
 
     footer {
@@ -194,47 +216,51 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
+
   <script>
+    function toggleCode(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const container = document.querySelector('.photo-container');
       container.innerHTML = `
-        <img src="pavfot1.jpg" alt="Pavlo Kozii" class="photo-front" />
-        <img src="pavfot2.jpg" alt="Pavlo Kozii 2" class="photo-back" />
+        <img src="pavfot1.jpeg" alt="Pavlo Kozii" class="photo-front" />
+        <img src="pavfot2.jpeg" alt="Pavlo Kozii 2" class="photo-back" />
       `;
-
       const toggleFlip = () => {
         container.classList.toggle('flipped');
       };
-
       container.addEventListener('click', toggleFlip);
       setInterval(toggleFlip, 8000);
+
+      const galleryItem = document.querySelector('.gallery-item');
+      galleryItem.addEventListener('click', function() {
+        window.open('https://saboresnaweb.github.io/SaboresNaWeb/index.html', '_blank');
+
+      });
     });
   </script>
 </head>
-<body>
-  <div class="beta-banner">
-    Este site está em <strong>versão beta</strong>. O lançamento oficial está previsto para aproximadamente 1 de julho de 2025. Obrigado pela compreensão!
-  </div>
 
+<body>
   <header>
     <div class="intro">
       <div class="vertical-text">HELLO, YOU</div>
       <div class="photo-container"></div>
       <div class="intro-text">
         <h1>Pavlo Kozii</h1>
-        <p class="role">Desenvolvedor de Software | Estudante | Entusiasta Técnico</p> <!-- Роль -->
+        <p class="role">Desenvolvedor de Software | Estudante | Entusiasta Técnico</p>
         <p class="description">
-          O meu nome é Pavlo e tenho paixão por criar soluções simples, elegantes e eficazes. Estou sempre à procura de novos desafios, gosto de trabalhar em projetos reais e de aprimorar as minhas competências diariamente.
+          Gosto de aprender e de desenvolver as minhas competências, sobretudo em programação. Valorizo conhecer novas pessoas, descobrir a cultura portuguesa e enfrentar novos desafios. Procuro sempre crescer  como pessoa e como profissional.
+
+
+
         </p>
       </div>
     </div>
@@ -242,31 +268,800 @@
 
   <section class="about">
     <h2>Sobre mim</h2>
-    <p>
-      Aqui encontra uma breve descrição sobre mim: quem sou, o que faço, os meus objetivos, competências e a minha abordagem ao trabalho.
+  <p>
+    Eu sou da Ucrânia e cheguei a Portugal por causa da guerra e da situação perigosa na minha região.<br><br>
+    Foi precisamente no dia <strong>25 de abril de 2022</strong>, por acaso no Dia da Revolução dos Cravos, que aqui cheguei. Essa data marcou o início de uma nova etapa na minha vida.<br><br>
+    Neste novo país, adaptei-me e fui conhecendo a cultura, a língua e a história portuguesas.<br>
+    Passei a maior parte do tempo num ambiente português que me revelou a beleza deste país, onde tenho a honra de estar.<br><br>
+    Estou muito grato a Portugal por me ter dado proteção e por todas as pessoas novas que encontrei ao longo do caminho.<br>
+    Tenho a intenção de contribuir para o desenvolvimento de Portugal, e talvez essa seja a minha missão como alguém que teve a sorte de estar num país tão acolhedor e que quer retribuir tudo o que recebeu — apoio, experiência e novas oportunidades.<br><br>
+    Sou apaixonado pelo mundo da tecnologia, especialmente pela programação.<br>
+    Gosto de criar coisas que parecem complicadas. Adoro a sensação de poder transformar símbolos simples em algoritmos complexos.<br><br>
+    Estou sempre a aprender, a aceitar desafios e a melhorar as minhas competências todos os dias.<br><br>
+    <em>
+      Sinto que cada dia é uma oportunidade para crescer, para descobrir algo novo e para me superar.<br>
+      Este site foi criado como um pequeno portefólio que vai ser melhorado com o tempo.<br>
+      Isto é apenas o começo :)
+    </em>
+  </p>
     </p>
   </section>
 
   <section class="projects">
-    <h2>Os meus projetos</h2>
-    <p>
-     Este é um site importante que criei para a escola.
-    </p>
+    <h2>Exemplos dos meus trabalhos</h2>
+  </section>
+
+  <section class="projects">
+    <h2>Sites</h2>
     <div class="gallery">
+      
       <div class="gallery-item">
         <img src="LOGO_CAT_WEB.png" alt="Site da escola" />
+        <p><strong>Site da Escola</strong><br>Website institucional feito para a escola como parte do curso profissional. Desenvolvido com HTML, CSS e JS.</p>
+      </div>
+
+      
+      <div class="screenshots">
+        <img src="scrin1.png" alt="Screenshot 1" />
+        <img src="scrin2.png" alt="Screenshot 2" />
       </div>
     </div>
-    <p style="margin-top: 2em; color: #aaa;">
-      Atualmente, estou a trabalhar ativamente em outros projetos — nomeadamente a desenvolver competências na área da cibersegurança, a criar novos sites utilizando JavaScript e a desenvolver aplicações em Python. Em breve, estes também estarão disponíveis aqui.
-    </p>
-    <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">
-      <button class="view-btn">GitHub — Ver mais</button>
-    </a>
+  </section>
+
+  <section class="code-section">
+    <h2>Exemplos de código</h2>
+
+    <div class="code-block">
+      <button class="toggle-btn" onclick="toggleCode('crm-code')">CRM Básico - Gestão de Clientes ⌄</button>
+      <div id="crm-code" class="hidden-code">
+        <pre>
+import tkinter as tk
+import csv
+from tkinter import ttk
+import os
+from datetime import datetime
+import tkinter.messagebox as messagebox
+
+
+#Funções CSV 
+def criar_ficheiro_csv():
+    if not os.path.exists("clientes.csv"):
+        with open("clientes.csv", mode="w", newline="", encoding="utf-8-sig") as f:
+            writer = csv.writer(f)
+            writer.writerow(["ID", "Nome", "Email", "Telemóvel", "Localização", "Data de Criação"])
+
+def criar_ficheiro_interacoes():
+    if not os.path.exists("interações.csv"):
+        with open("interações.csv",mode="w",newline="",encoding="utf-8-sig") as f:
+
+            writer = csv.writer(f)
+            writer.writerow(["ID_Interacao", "ID_Cliente", "Tipo", "Data", "Descricao"])
+
+def obter_next_id():
+    try:
+        with open("clientes.csv", newline="", encoding="utf-8-sig") as f:
+            reader = csv.reader(f)
+            next(reader)
+            linhas = list(reader)
+            if linhas:
+                ultimo_id = int(linhas[-1][0])
+                return ultimo_id + 1
+    except:
+        pass
+    return 1
+def obter_next_id_interacao():
+    try:
+        with open("interações.csv",newline="",encoding="utf-8-sig") as f:
+            reader = csv.reader(f)
+            next(reader)
+            linhas = list(reader)
+            if linhas:
+                ultimo_id = int(linhas[-1][0])
+                return ultimo_id + 1
+    except:
+        pass
+    return 1
+
+# Functions of Interface
+def pesquisar_cliente():
+    termo = entrada_pesquisa.get().lower()
+    for row in tabela.get_children():
+        tabela.delete(row)
+    try:
+        with open("clientes.csv", newline="", encoding="utf-8-sig") as f:
+            reader = csv.reader(f)
+            next(reader)
+            for linha in reader:
+                nome = linha[1].lower()
+                email = linha[2].lower()
+                if termo in nome or termo in email:
+                    tabela.insert("", tk.END, values=linha)
+    except:
+        pass
+def valid_email(email):
+    return "@" in email and "." in email
+
+def adicionar_cliente():
+    id_cliente = obter_next_id()
+    nome = entrada_nome.get()
+    email = entrada_email.get()
+    telemovel = entrada_telemovel.get()
+    localizacao = entrada_localizacao.get()
+    data = datetime.now().strftime("%Y-%m-%d")
+
+    if not nome or not email:
+        messagebox.showerror("Erro", "Nome e Email são obrigatórios.")
+        return
+    
+    if not valid_email(email):
+        messagebox.showerror("Erro", "Email inválido.")
+        return
+
+    if nome and email:
+        with open("clientes.csv", mode="a", newline="", encoding="utf-8-sig") as f:
+            writer = csv.writer(f)
+            writer.writerow([id_cliente, nome, email, telemovel, localizacao, data])
+            messagebox.showinfo("Sucesso", f"Cliente '{nome}' adicionado com sucesso!")
+        limpar_campos()
+        carregar_clientes()
+
+def limpar_campos():
+    entrada_nome.delete(0, tk.END)
+    entrada_email.delete(0, tk.END)
+    entrada_telemovel.delete(0, tk.END)
+    entrada_localizacao.delete(0, tk.END)
+
+def carregar_clientes():
+    for row in tabela.get_children():
+        tabela.delete(row)
+    try:
+        with open("clientes.csv", newline="", encoding="utf-8-sig") as f:
+            reader = csv.reader(f)
+            next(reader)
+            for linha in reader:
+                tabela.insert("", tk.END, values=linha)
+    except:
+        pass
+
+def selecionar_cliente(event):
+    selecionado = tabela.focus()
+    if selecionado:
+        valores = tabela.item(selecionado, 'values')
+        if valores:
+            entrada_nome.delete(0, tk.END)
+            entrada_nome.insert(0, valores[1])
+            entrada_email.delete(0, tk.END)
+            entrada_email.insert(0, valores[2])
+            entrada_telemovel.delete(0, tk.END)
+            entrada_telemovel.insert(0, valores[3])
+            entrada_localizacao.delete(0, tk.END)
+            entrada_localizacao.insert(0, valores[4])
+
+def editar_cliente():
+    selecionado = tabela.focus()
+    if not selecionado:
+        messagebox.showerror("Erro", "Nenhum cliente selecionado para editar.")
+        return
+
+    valores = tabela.item(selecionado, 'values')
+    if not valores:
+        messagebox.showerror("Erro", "Nenhum cliente selecionado para editar.")
+        return
+
+    id_cliente = valores[0]
+    nome = entrada_nome.get()
+    email = entrada_email.get()
+    telemovel = entrada_telemovel.get()
+    localizacao = entrada_localizacao.get()
+
+    linhas_novas = []
+    with open("clientes.csv", newline="", encoding="utf-8-sig") as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        for linha in reader:
+            if linha[0] == id_cliente:
+                linha = [id_cliente, nome, email, telemovel, localizacao, linha[5]]
+            linhas_novas.append(linha)
+
+    with open("clientes.csv", mode="w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        writer.writerows(linhas_novas)
+
+    carregar_clientes()
+    limpar_campos()
+
+def eliminar_cliente():
+    selecionado = tabela.focus()
+    if not selecionado:
+        messagebox.showerror("Erro", "Nenhum cliente selecionado para eliminar.")
+        return
+
+    valores = tabela.item(selecionado, 'values')
+    if not valores:
+        messagebox.showerror("Erro", "Nenhum cliente selecionado para eliminar.")
+        return
+
+    id_cliente = valores[0]
+    nome = valores[1]
+
+    resposta = messagebox.askyesno("Confirmação",f"Tem certeza que deseja eliminar o cliente '{nome}'?")
+    if not resposta:
+        return
+
+    linhas_novas = []
+
+    with open("clientes.csv", newline="", encoding="utf-8-sig") as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        for linha in reader:
+            if linha[0] != id_cliente:
+                linhas_novas.append(linha)
+
+    with open("clientes.csv", mode="w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        writer.writerows(linhas_novas)
+
+    messagebox.showinfo("Sucesso", f"Cliente '{nome}' eliminado com sucesso!")
+    carregar_clientes()
+    limpar_campos()
+
+def abrir_janela_interacao():
+    cliente_selecionado = tabela.selection()
+    if not  cliente_selecionado:
+        messagebox.showerror("Erro", "Por favor, selecione um cliente.")
+        return
+    
+
+    cliente = tabela.item(cliente_selecionado)["values"]
+
+    if not cliente:
+        messagebox.showerror("Erro", "Cliente inválido.")
+        return
+    
+    id_cliente = cliente[0]
+    nome_cliente = cliente[1]
+
+    janela_interacao = tk.Toplevel(janela)
+    janela_interacao.title(f"Nova Interação para {nome_cliente}")
+    janela_interacao.geometry("600x500")
+    janela_interacao.configure(bg="#1e1e1e")
+
+    tk.Label(janela_interacao,text=f"Cliente : {nome_cliente}",bg="#1e1e1e",fg="#dddddd").pack(pady=10)
+
+    tk.Label(janela_interacao, text="Tipo da Interação:", bg="#1e1e1e", fg="#dddddd").pack()
+    entrada_tipo = ttk.Combobox(janela_interacao, values=["Reunião", "Chamada"], state="readonly")
+    entrada_tipo.pack(pady=5)
+    entrada_tipo.set("Reunião") 
+
+    tk.Label(janela_interacao,text="Descrição",bg="#1e1e1e",fg="#dddddd").pack()
+    entrada_descricao = tk.Text(janela_interacao,width=40,height=5,bg="#333333",fg="white",insertbackground="white")
+    entrada_descricao.pack(pady=5)
+
+    tk.Label(janela_interacao, text="Histórico de Interações:", bg="#222222", fg="white").pack()
+    historico_texto = tk.Text(janela_interacao, width=70, height=15, bg="#111111", fg="white", state="disabled")
+    historico_texto.pack(pady=5)
+
+    def carregar_interacoes():
+        historico_texto.config(state="normal")
+        historico_texto.delete("1.0",tk.END)
+
+        try:
+            with open("interações.csv",newline="",encoding="utf-8-sig") as f:
+                reader = csv.reader(f)
+                next(reader)
+                for linha in reader:
+                    if linha[1] == id_cliente:
+                        historico_texto.insert(tk.END,f"{linha[3]}: {linha[2]}\n")
+        except FileNotFoundError:
+            historico_texto.insert(tk.END,"Nenhuma interação encontrada.")
+        historico_texto.config(state="disabled")
+
+    def salvar_interacao():
+        tipo = entrada_tipo.get()
+        descricao = entrada_descricao.get("1.0",tk.END).strip()
+        data_atual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        id_interacao = obter_next_id_interacao()
+
+        if descricao:
+           with open("interações.csv", mode="a", newline="",encoding="utf-8-sig") as f: 
+               writer = csv.writer(f)
+               writer.writerow([id_interacao, id_cliente, tipo, data_atual, descricao])
+           messagebox.showinfo("Sucesso", "Interação salva com sucesso.")
+           entrada_descricao.delete("1.0",tk.END)
+           carregar_clientes()
+        else:
+            messagebox.showerror("Erro", "Por favor, selecione um cliente e escreva a descrição.")
+
+    carregar_interacoes()
+    btn_salvar = tk.Button(janela_interacao,text="Salvar",bg="#444444",fg="white",command=salvar_interacao)
+    btn_salvar.pack(pady=10)
+
+
+def abrir_janela_reunioes():
+    janela_reunioes = tk.Toplevel(janela)
+    janela_reunioes.title("Todas as Reuniões")
+    janela_reunioes.geometry("700x400")
+    janela_reunioes.configure(bg="#1e1e1e")
+
+    tk.Label(janela_reunioes, text="Histórico de Reuniões", font=("Arial", 14), bg="#1e1e1e", fg="white").pack(pady=10)
+    colunas = ("ID_Interação", "ID_Cliente", "Tipo", "Data", "Descrição")
+    tabela_reunioes = ttk.Treeview(janela_reunioes, columns=colunas, show="headings")
+
+    for col in colunas:
+        tabela_reunioes.heading(col, text=col)
+        tabela_reunioes.column(col, width=130)
+
+    scrollbar_reunioes = ttk.Scrollbar(janela_reunioes, orient="vertical", command=tabela_reunioes.yview)
+    tabela_reunioes.configure(yscrollcommand=scrollbar_reunioes.set)
+
+    tabela_reunioes.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    scrollbar_reunioes.pack(side=tk.RIGHT, fill=tk.Y)
+
+    try:
+        with open("interações.csv", newline="", encoding="utf-8-sig") as f:
+            reader = csv.reader(f)
+            next(reader)
+            for linha in reader:
+                if linha[2].strip().lower() == "reunião":
+                    tabela_reunioes.insert("", tk.END, values=linha)
+    except FileNotFoundError:
+        messagebox.showerror("Erro", "Ficheiro de interações não encontrado.")
+
+# GUI 
+criar_ficheiro_csv()
+criar_ficheiro_interacoes()
+janela = tk.Tk()
+janela.geometry("800x600")
+janela.title("CRM Básico - Gestão de Clientes")
+janela.configure(bg="#1e1e1e")
+
+estilo = ttk.Style()
+janela.option_add("*TButton*foreground", "#ffffff")
+estilo.theme_use("clam")
+estilo.configure("Treeview",
+                 background="#2e2e2e",
+                 fieldbackground="#2e2e2e",
+                 foreground="white",
+                 rowheight=25)
+estilo.map("Treeview", background=[("selected", "#5c5c5c")])
+
+
+# Labels and Entradas
+cor_label = "#dddddd"
+entry_bg = "#333333"
+entry_fg = "white"
+
+tk.Label(janela, text="Nome:", bg="#1e1e1e", fg=cor_label).place(x=50, y=50)
+entrada_nome = tk.Entry(janela, width=40, bg=entry_bg, fg=entry_fg, insertbackground="white")
+entrada_nome.place(x=200, y=50)
+
+tk.Label(janela, text="Email:", bg="#1e1e1e", fg=cor_label).place(x=50, y=90)
+entrada_email = tk.Entry(janela, width=40, bg=entry_bg, fg=entry_fg, insertbackground="white")
+entrada_email.place(x=200, y=90)
+
+tk.Label(janela, text="Telemóvel:", bg="#1e1e1e", fg=cor_label).place(x=50, y=130)
+entrada_telemovel = tk.Entry(janela, width=40, bg=entry_bg, fg=entry_fg, insertbackground="white")
+entrada_telemovel.place(x=200, y=130)
+
+tk.Label(janela, text="Localização:", bg="#1e1e1e", fg=cor_label).place(x=50, y=170)
+entrada_localizacao = tk.Entry(janela, width=40, bg=entry_bg, fg=entry_fg, insertbackground="white")
+entrada_localizacao.place(x=200, y=170)
+
+tk.Label(janela, text="🔍 Pesquisar:", bg="#1e1e1e", fg=cor_label).place(x=50, y=350)
+entrada_pesquisa = tk.Entry(janela, width=40, bg=entry_bg, fg=entry_fg, insertbackground="white")
+entrada_pesquisa.place(x=170, y=350)
+
+# Butons
+def criar_botao(texto, comando, x):
+    return tk.Button(janela, text=texto, bg="#444444", fg="white", width=15, command=comando).place(x=x, y=220)
+
+criar_botao("Adicionar", adicionar_cliente, 100)
+criar_botao("Editar", editar_cliente, 250)
+criar_botao("Eliminar", eliminar_cliente, 400)
+criar_botao("Nova Interação", abrir_janela_interacao, 550)
+criar_botao("Ver Reuniões", abrir_janela_reunioes, 700)
+tk.Button(janela, text="Pesquisar", bg="#666666", fg="white", command=pesquisar_cliente).place(x=430, y=346)
+tk.Button(janela, text="Mostrar Todos", bg="#666666", fg="white", command=carregar_clientes).place(x=500, y=346)
+
+# Tabela
+colunas = ("ID", "Nome", "Email", "Telemovel", "Localização", "Data de Criação")
+tabela = ttk.Treeview(janela, columns=colunas, show="headings")
+tabela.bind("<ButtonRelease-1>", selecionar_cliente)
+
+for col in colunas:
+    tabela.heading(col, text=col)
+    tabela.column(col, width=120)
+
+scrollbar = ttk.Scrollbar(janela, orient="vertical", command=tabela.yview)
+tabela.configure(yscrollcommand=scrollbar.set)
+tabela.place(x=50, y=400, width=700, height=280)
+scrollbar.place(x=750, y=400, height=280)
+
+carregar_clientes()
+janela.mainloop()
+
+        </pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <button class="toggle-btn" onclick="toggleCode('mini-code')">Código simples assistant.py ⌄</button>
+      <div id="mini-code" class="hidden-code">
+        <pre>
+import datetime
+import random
+import time
+import sys
+import os
+import json
+
+
+class SimpleAssistant:
+    def __init__(self, config_path="config.json"):
+        self.load_config(config_path)
+        self.log_file = self.config.get("log_file", "logs.txt")
+        self.commands = {
+            "weather": self.get_weather,
+            "day": self.get_day,
+            "time": self.get_time,
+            "your name": self.get_name,
+            "how are you": self.get_mood,
+            "help": self.get_help,
+            "clear": self.clear_screen,
+            "internet": self.check_internet_connection
+        }
+
+    def load_config(self, path):
+        try:
+            with open(path, "r") as file:
+                self.config = json.load(file)
+        except FileNotFoundError:
+            print("Configuration file not found.")
+            sys.exit(1)
+
+    def log(self, message):
+        with open(self.log_file, "a") as log:
+            timestamp = datetime.datetime.now().isoformat()
+            log.write(f"[{timestamp}] {message}\n")
+
+    def get_weather(self):
+        forecast = [
+            "Sunny and bright.",
+            "Possible rain in the afternoon.",
+            "Overcast with a slight breeze.",
+            "Clear skies expected all day."
+        ]
+        return random.choice(forecast)
+
+    def get_day(self):
+        today = datetime.datetime.now().strftime("%A")
+        return f"Today is {today}."
+
+    def get_time(self):
+        now = datetime.datetime.now().strftime("%H:%M:%S")
+        return f"The current time is {now}."
+
+    def get_name(self):
+        return f"My name is {self.config.get('name', 'Assistant')}."
+
+    def get_mood(self):
+        return "I'm operating within normal parameters."
+
+    def get_help(self):
+        return (
+            "Available commands:\n"
+            " - What is the weather?\n"
+            " - What day is it?\n"
+            " - What time is it?\n"
+            " - What is your name?\n"
+            " - How are you?\n"
+            " - Check internet connection\n"
+            " - clear (clear screen)\n"
+            " - help (show this message)\n"
+            " - exit (close the assistant)\n"
+        )
+
+    def check_internet_connection(self):
+        # Це лише фейк
+        time.sleep(1)
+        return "Internet connection: OK (simulated)."
+
+    def clear_screen(self):
+        os.system("cls" if os.name == "nt" else "clear")
+        return ""
+
+    def handle_unknown(self):
+        return "I'm sorry, I can't process that request."
+
+    def process_question(self, question):
+        question = question.lower().strip()
+        self.log(f"User asked: {question}")
+        for keyword, action in self.commands.items():
+            if keyword in question:
+                result = action()
+                self.log(f"Response: {result}")
+                return result
+        return self.handle_unknown()
+
+    def run(self):
+        print("=" * 50)
+        print(f"{self.config.get('name', 'Assistant')} v{self.config.get('version', '1.0')}")
+        print("Type 'help' to see available commands.")
+        print("=" * 50)
+
+        while True:
+            try:
+                user_input = input(">> ").strip()
+                if not user_input:
+                    continue
+                if user_input.lower() == "exit":
+                    print("Exiting...")
+                    self.log("Session ended.")
+                    break
+                response = self.process_question(user_input)
+                time.sleep(0.5)
+                if response:
+                    print(response + "\n")
+            except KeyboardInterrupt:
+                print("\nSession interrupted by user.")
+                break
+            except Exception as e:
+                print("An unexpected error occurred.")
+                self.log(f"Error: {str(e)}")
+                break
+
+
+if __name__ == "__main__":
+    assistant = SimpleAssistant()
+    assistant.run()
+
+        </pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <button class="toggle-btn" onclick="toggleCode('cpp-code')">C++ — Verificador de Injeção SQL ⌄</button>
+      <div id="cpp-code" class="hidden-code">
+        <pre>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool contains_sql_injection(const string& input) {
+    vector<string> suspicious = {
+        "'", "\"", "--", ";", "/*", "*/",
+        " or ", " and ", " drop ", " select ", " insert ", " delete ", " update "
+    };
+
+    string lowered_input = input;
+    transform(lowered_input.begin(), lowered_input.end(), lowered_input.begin(), ::tolower);
+
+    for (const auto& pattern : suspicious) {
+        if (lowered_input.find(pattern) != string::npos) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int main() {
+    string input_line;
+    cout << "Enter your name: ";
+    getline(cin, input_line);
+
+    if (contains_sql_injection(input_line)) {
+        cout << "Warning: Potential SQL Injection detected." << endl;
+    } else {
+        cout << "Welcome, " << input_line << "!" << endl;
+    }
+
+    string test_queries[] = {
+        "SELECT * FROM users;",
+        "Robert'); DROP TABLE Students;--",
+        "normalusername",
+        "' OR '1'='1"
+    };
+
+    for (const auto& query : test_queries) {
+        bool flagged = contains_sql_injection(query);
+        cout << "Query: \"" << query << "\" - ";
+        if (flagged) {
+            cout << "Injection detected";
+        } else {
+            cout << "Clean";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
+
+        </pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <button class="toggle-btn" onclick="toggleCode('monitor-code')">Monitoramento de Preços - Em desenvolvimento ⌄</button>
+      <div id="monitor-code" class="hidden-code">
+        <pre>
+import requests
+import undetected_chromedriver as uc
+from bs4 import BeautifulSoup
+from openpyxl import Workbook, load_workbook
+from datetime import datetime
+import os
+import time
+
+# === Configurações ===
+URL_PRODUTO = 'https://www.worten.pt/produtos/p-lenovo-ideapad-slim-3-14ian8-in-4-128-8186637'
+LIMITE_PRECO = 300.00
+ARQUIVO_HISTORICO = 'historico_precos.xlsx'
+ENVIADO_ULTIMA_VEZ = False
+
+TOKEN = '######'
+CHAT_ID = '######'
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, como Gecko) Chrome/125.0.0.0 Safari/537.36"
+}
+
+def enviar_mensagem_telegram(texto):
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+    payload = {
+        'chat_id': CHAT_ID,
+        'text': texto,
+        'parse_mode': 'HTML'
+    }
+    try:
+        resposta = requests.post(url, data=payload)
+        if resposta.status_code == 200:
+            print("Notificação enviada via Telegram.")
+        else:
+            print(f"Falha ao enviar notificação. Código: {resposta.status_code}")
+    except Exception as e:
+        print(f"Erro ao enviar mensagem Telegram: {e}")
+
+def obter_preco_api():
+    json_url = "https://api.worten.pt/catalog/products/8186637"
+    try:
+        resposta = requests.get(json_url, headers=HEADERS, timeout=8)
+        resposta.raise_for_status()
+        dados = resposta.json()
+        preco = float(dados['price']['value'])
+        print(f"Preço obtido via API/JSON: {preco}€")
+        return preco
+    except Exception as e:
+        print("Falha ao obter preço via API/JSON:", e)
+        return None
+
+def obter_preco_headless():
+    try:
+        options = uc.ChromeOptions()
+        options.headless = True
+        options.add_argument('--disable-blink-features=AutomationControlled')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument("--start-maximized")
+
+        driver = uc.Chrome(options=options)
+        driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+            "source": """
+                Object.defineProperty(navigator, 'webdriver', {
+                    get: () => undefined
+                });
+            """
+        })
+
+        driver.get(URL_PRODUTO)
+        driver.implicitly_wait(10)
+        time.sleep(5)
+
+        html = driver.page_source
+        with open("debug.html", "w", encoding="utf-8") as f:
+            f.write(html)
+
+        soup = BeautifulSoup(html, 'html.parser')
+        valor = soup.find('span', class_='value')
+        decimal = soup.find('sup', class_='decimal')
+        driver.quit()
+
+        if not valor or not decimal:
+            print("Elemento de preço não encontrado.")
+            return None
+
+        preco_texto = f"{valor.text.strip()}.{decimal.text.strip()}"
+        preco = float(preco_texto.replace(',', '.'))
+        return preco
+
+    except Exception as e:
+        print("Erro ao carregar página com headless browser:", e)
+        return None
+
+def salvar_historico(preco):
+    if not os.path.exists(ARQUIVO_HISTORICO):
+        wb = Workbook()
+        ws = wb.active
+        ws.append(['Data/Hora', 'Preço (€)'])
+    else:
+        wb = load_workbook(ARQUIVO_HISTORICO)
+        ws = wb.active
+    ws.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'), preco])
+    wb.save(ARQUIVO_HISTORICO)
+
+def main():
+    global ENVIADO_ULTIMA_VEZ
+    preco_atual = obter_preco_api()
+    if not preco_atual:
+        print("API/JSON falhou, tentando navegador headless...")
+        preco_atual = obter_preco_headless()
+
+    if preco_atual:
+        salvar_historico(preco_atual)
+        print(f'Preço atual: {preco_atual:.2f}€')
+
+        if preco_atual < LIMITE_PRECO:
+            if not ENVIADO_ULTIMA_VEZ:
+                mensagem = f"<b>Alerta de preço baixo!</b>\nProduto: {URL_PRODUTO}\nPreço atual: {preco_atual:.2f}€\nLimite definido: {LIMITE_PRECO}€"
+                enviar_mensagem_telegram(mensagem)
+                ENVIADO_ULTIMA_VEZ = True
+            else:
+                print("Preço ainda abaixo do limite, notificação já enviada.")
+        else:
+            ENVIADO_ULTIMA_VEZ = False
+    else:
+        print("Não foi possível obter o preço.")
+
+if __name__ == "__main__":
+    print("Projeto: Monitoramento de Preços - Em desenvolvimento")
+    main()
+
+        </pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <button class="toggle-btn" onclick="toggleCode('extra-code')">C# Unity — Movimento de Personagem Top-Down ⌄</button>
+      <div id="extra-code" class="hidden-code">
+        <pre>
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float speed = 5f;
+    private Rigidbody2D rb;
+    private Vector2 direction;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    void Update()
+    {
+        direction.x = Input.GetAxisRaw("Horizontal");
+        direction.y = Input.GetAxisRaw("Vertical");
+        direction.Normalize();
+    }
+
+    void FixedUpdate()
+    {
+        rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
+    }
+}
+
+        </pre>
+      </div>
+    </div>
+
   </section>
 
   <footer>
-    &copy; 2025 Pavlo Kozii. 
+    &copy; 2025 Pavlo Kozii.
   </footer>
 </body>
 </html>
